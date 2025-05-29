@@ -14,24 +14,52 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { LogIn } from "lucide-react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase/config";
 import { useRouter } from "next/navigation";
-// import Link from "next/link"; // Link to signup removed
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import type { AuthUser } from "@/types";
+
+// --- DUMP DATA FOR LOGIN ---
+const DUMMY_PASSWORD = "password"; // Use a consistent password for all dump users for simplicity
+
+const dumpUsers: AuthUser[] = [
+  {
+    uid: "member-001",
+    email: "member@example.com",
+    displayName: "John Member",
+    role: "member",
+    photoURL: "https://placehold.co/100x100.png?text=JM"
+  },
+  {
+    uid: "staff-001",
+    email: "staff@example.com",
+    displayName: "Sarah Staff",
+    role: "staff",
+    photoURL: "https://placehold.co/100x100.png?text=SS"
+  },
+  {
+    uid: "admin-001",
+    email: "admin@example.com",
+    displayName: "Alex Admin",
+    role: "admin",
+    photoURL: "https://placehold.co/100x100.png?text=AA"
+  },
+];
+// --- END DUMP DATA ---
 
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email address."),
-  password: z.string().min(6, "Password must be at least 6 characters."),
+  password: z.string().min(1, "Password is required."), // Min 1 as we are using a dummy password
 });
 
 export default function LoginPage() {
   const { toast } = useToast();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const authContext = useAuth();
 
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
@@ -43,26 +71,26 @@ export default function LoginPage() {
 
   async function onSubmit(values: z.infer<typeof loginFormSchema>) {
     setIsLoading(true);
-    try {
-      await signInWithEmailAndPassword(auth, values.email, values.password);
+    
+    const foundUser = dumpUsers.find(u => u.email === values.email);
+
+    if (foundUser && values.password === DUMMY_PASSWORD) {
+      authContext.loginWithDumpUser(foundUser);
       toast({
         title: "Login Successful!",
-        description: "Welcome back!",
+        description: `Welcome back, ${foundUser.displayName}! (Dump Data Login)`,
       });
-      // Check for redirect query parameter
       const queryParams = new URLSearchParams(window.location.search);
       const redirectPath = queryParams.get("redirect");
       router.push(redirectPath || "/profile");
-    } catch (error: any) {
-      console.error("Login error:", error);
+    } else {
       toast({
         title: "Login Failed",
-        description: error.message || "Please check your credentials and try again.",
+        description: "Invalid email or password. (Hint: try 'password' for dump users)",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
+    setIsLoading(false);
   }
 
   return (
@@ -74,6 +102,10 @@ export default function LoginPage() {
           </CardTitle>
           <CardDescription>
             Access your BloodConnect account.
+            <br />
+            <span className="text-xs text-muted-foreground">
+              (Using Dump Data - try member@example.com, staff@example.com, or admin@example.com with password: '{DUMMY_PASSWORD}')
+            </span>
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -111,16 +143,6 @@ export default function LoginPage() {
             </form>
           </Form>
         </CardContent>
-        {/* Signup link removed from CardFooter
-        <CardFooter className="flex flex-col items-center text-sm">
-          <p className="text-muted-foreground">
-            Don&apos;t have an account?{" "}
-            <Button variant="link" asChild className="p-0 text-accent hover:text-accent/80">
-              <Link href="/signup">Sign up here</Link>
-            </Button>
-          </p>
-        </CardFooter>
-        */}
       </Card>
     </div>
   );
