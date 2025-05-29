@@ -49,8 +49,8 @@ export default function Home() {
               icon={<Users className="text-primary" />}
               title="Donor Registration"
               description="Easily register as a blood donor and manage your availability."
-              link="/register"
-              linkText="Register Now"
+              link="/register" 
+              linkText="Register / Update Profile"
             />
             <FeatureCard
               icon={<Search className="text-primary" />}
