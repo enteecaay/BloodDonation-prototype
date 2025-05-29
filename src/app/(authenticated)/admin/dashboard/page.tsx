@@ -4,10 +4,11 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ClipboardList, UserCog, Building, AlertTriangle, LineChart, Users, Droplet } from "lucide-react";
+import { ClipboardList, UserCog, Building, AlertTriangle, LineChart, Users, Droplet, HeartHandshake, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import React from 'react';
 
 export default function AdminDashboardPage() {
   const { user, role, loading } = useAuth();
