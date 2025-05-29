@@ -1,4 +1,4 @@
-// This file is obsolete and has been moved to /src/app/(authenticated)/register/components/DonorRegistrationForm.tsx
-// It is kept here temporarily with empty content as its corresponding page was causing a route conflict.
+// This file is obsolete and its content has been replaced.
+// The active component is /src/app/(authenticated)/register/components/DonorRegistrationForm.tsx.
 // This file can be safely deleted.
-export {};
+export const componentMessage = "This component is obsolete.";

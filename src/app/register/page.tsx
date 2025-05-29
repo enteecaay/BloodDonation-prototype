@@ -1,4 +1,4 @@
-// This file is obsolete and has been moved to /src/app/(authenticated)/register/page.tsx
-// It is kept here temporarily with empty content to resolve a route conflict.
+// This file is obsolete and its content has been replaced to prevent route conflicts.
+// The active page is /src/app/(authenticated)/register/page.tsx.
 // This file can be safely deleted.
-export {};
+export const message = "This page is obsolete and should not be treated as a route.";
