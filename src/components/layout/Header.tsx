@@ -102,9 +102,11 @@ export default function Header() {
               <Button variant="ghost" asChild className="text-sm font-medium text-foreground/80 hover:text-primary/90 hover:bg-accent/10">
                 <Link href="/login"><LogIn size={16} className="mr-1.5"/> Login</Link>
               </Button>
+              {/* Signup button removed for guest view
               <Button variant="default" size="sm" asChild className="text-sm bg-accent hover:bg-accent/90 text-accent-foreground">
                 <Link href="/signup"><UserPlus size={16} className="mr-1.5"/> Sign Up</Link>
               </Button>
+              */}
             </>
           )}
         </nav>
@@ -171,11 +173,13 @@ export default function Header() {
                           <Link href="/login"><LogIn size={16} className="mr-2"/> Login</Link>
                         </Button>
                       </SheetClose>
+                      {/* Signup button removed for guest view in mobile
                       <SheetClose asChild>
                         <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
                           <Link href="/signup"><UserPlus size={16} className="mr-2"/> Sign Up</Link>
                         </Button>
                       </SheetClose>
+                      */}
                     </div>
                   )}
                 </div>

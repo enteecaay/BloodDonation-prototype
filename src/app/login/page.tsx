@@ -20,7 +20,7 @@ import { LogIn } from "lucide-react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase/config";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+// import Link from "next/link"; // Link to signup removed
 import { useState } from "react";
 
 const loginFormSchema = z.object({
@@ -49,7 +49,10 @@ export default function LoginPage() {
         title: "Login Successful!",
         description: "Welcome back!",
       });
-      router.push("/profile"); // Redirect to profile or dashboard
+      // Check for redirect query parameter
+      const queryParams = new URLSearchParams(window.location.search);
+      const redirectPath = queryParams.get("redirect");
+      router.push(redirectPath || "/profile");
     } catch (error: any) {
       console.error("Login error:", error);
       toast({
@@ -108,6 +111,7 @@ export default function LoginPage() {
             </form>
           </Form>
         </CardContent>
+        {/* Signup link removed from CardFooter
         <CardFooter className="flex flex-col items-center text-sm">
           <p className="text-muted-foreground">
             Don&apos;t have an account?{" "}
@@ -116,6 +120,7 @@ export default function LoginPage() {
             </Button>
           </p>
         </CardFooter>
+        */}
       </Card>
     </div>
   );
