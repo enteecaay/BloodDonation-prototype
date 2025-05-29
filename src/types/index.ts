@@ -24,7 +24,18 @@ export interface Donor {
   availability: string[];
   // Potentially add lastDonationDate, etc.
 }
+export type BloodType = "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
 
+export const bloodTypeOptions: { value: BloodType; label: string }[] = [
+  { value: "A+", label: "A+" },
+  { value: "A-", label: "A-" },
+  { value: "B+", label: "B+" },
+  { value: "B-", label: "B-" },
+  { value: "AB+", label: "AB+" },
+  { value: "AB-", label: "AB-" },
+  { value: "O+", label: "O+" },
+  { value: "O-", label: "O-" },
+];
 export interface BloodDrive {
   id: string;
   name: string;
