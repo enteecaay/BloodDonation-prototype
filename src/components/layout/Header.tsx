@@ -13,14 +13,17 @@ import {
     LayoutDashboard, 
     ShieldCheck, 
     Activity,
-    Siren, // Added
-    Mail, // Added
-    CalendarDays, // Added
-    FileText, // Added
-    Users, // Added
-    HeartHandshake, // Added
-    CalendarCheck, // Added
-    DatabaseZap // Added
+    Siren,
+    Mail,
+    CalendarDays,
+    FileText,
+    Users,
+    HeartHandshake,
+    CalendarCheck,
+    DatabaseZap,
+    ClipboardList, // New for Admin Dashboard
+    Building, // New for Manage Blood Units (Admin)
+    UserCog // New for Manage Users (Admin)
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
@@ -41,7 +44,7 @@ const baseNavItems = [
 const navItemsByRole: Record<Role | 'guest', Array<{ href: string; label: string; icon?: React.ReactNode }>> = {
   guest: [
     ...baseNavItems,
-    { href: "/register", label: "Become a Donor", icon: <UserPlus size={16}/> },
+    { href: "/register", label: "Become a Donor", icon: <UserPlus size={16}/> }, // Guests prompted to login
   ],
   member: [
     ...baseNavItems,
@@ -52,7 +55,7 @@ const navItemsByRole: Record<Role | 'guest', Array<{ href: string; label: string
   staff: [
     ...baseNavItems,
     { href: "/search", label: "Find Blood", icon: <Activity size={16}/> },
-    { href: "/emergency", label: "Emergency System", icon: <Siren size={16}/> }, // Staff can post
+    { href: "/emergency", label: "Emergency System", icon: <Siren size={16}/> },
     { href: "/reminder", label: "Donation Reminder", icon: <Mail size={16}/> },
     // Staff specific links (examples, actual pages need to be created)
     // { href: "/staff/manage-drives", label: "Manage Drives", icon: <CalendarDays size={16}/> },
@@ -61,14 +64,13 @@ const navItemsByRole: Record<Role | 'guest', Array<{ href: string; label: string
   ],
   admin: [
     ...baseNavItems,
-    { href: "/reminder", label: "Donation Reminder Tool", icon: <Mail size={16}/> }, // Admin can use for any donor
-    // Admin specific links (examples)
-    // { href: "/admin/dashboard", label: "Admin Dashboard", icon: <ShieldCheck size={16}/> },
-    // { href: "/admin/manage-users", label: "Manage Users", icon: <Users size={16}/> },
+    { href: "/admin/dashboard", label: "Admin Dashboard", icon: <ClipboardList size={16}/> },
+    { href: "/admin/users", label: "Manage Users", icon: <UserCog size={16}/> },
+    { href: "/admin/blood-units", label: "Manage Blood Units", icon: <Building size={16}/> },
+    { href: "/reminder", label: "Donation Reminder Tool", icon: <Mail size={16}/> },
     // { href: "/admin/manage-donations", label: "Manage Donations", icon: <HeartHandshake size={16}/> },
-    // { href: "/admin/manage-all-blogs", label: "Manage All Blogs", icon: <LayoutDashboard size={16}/> }, // Using existing icon
+    // { href: "/admin/manage-all-blogs", label: "Manage All Blogs", icon: <LayoutDashboard size={16}/> },
     // { href: "/admin/manage-all-drives", label: "Manage All Drives", icon: <CalendarCheck size={16}/> },
-    // { href: "/admin/manage-blood-units", label: "Blood Units (All)", icon: <DatabaseZap size={16}/> },
   ],
 };
 

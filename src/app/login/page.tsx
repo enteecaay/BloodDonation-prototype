@@ -31,28 +31,61 @@ const dumpUsers: AuthUser[] = [
     email: "member@example.com",
     displayName: "John Member",
     role: "member",
-    photoURL: "https://placehold.co/100x100.png?text=JM"
+    photoURL: "https://placehold.co/100x100.png?text=JM",
+    lastLogin: "2024-07-28T10:00:00Z", 
+    accountStatus: "active"
+  },
+   {
+    uid: "member-002",
+    email: "jane.donor@example.com",
+    displayName: "Jane Donor",
+    role: "member",
+    photoURL: "https://placehold.co/100x100.png?text=JD",
+    lastLogin: "2024-07-25T18:45:00Z",
+    accountStatus: "active"
+  },
+  {
+    uid: "member-003",
+    email: "peter.lee@example.com",
+    displayName: "Peter Lee",
+    role: "member",
+    photoURL: "https://placehold.co/100x100.png?text=PL",
+    lastLogin: "2024-07-22T11:20:00Z",
+    accountStatus: "suspended"
   },
   {
     uid: "staff-001",
     email: "staff@example.com",
-    displayName: "Sarah Staff",
+    displayName: "Sarah Staff (City General)",
     role: "staff",
-    photoURL: "https://placehold.co/100x100.png?text=SS"
+    photoURL: "https://placehold.co/100x100.png?text=SS",
+    lastLogin: "2024-07-29T14:30:00Z",
+    accountStatus: "active"
+  },
+  {
+    uid: "staff-002",
+    email: "county.staff@example.com",
+    displayName: "Mike Chen (County Medical)",
+    role: "staff",
+    photoURL: "https://placehold.co/100x100.png?text=MC",
+    lastLogin: "2024-07-29T08:00:00Z",
+    accountStatus: "active"
   },
   {
     uid: "admin-001",
     email: "admin@example.com",
     displayName: "Alex Admin",
     role: "admin",
-    photoURL: "https://placehold.co/100x100.png?text=AA"
+    photoURL: "https://placehold.co/100x100.png?text=AA",
+    lastLogin: "2024-07-30T09:15:00Z",
+    accountStatus: "active"
   },
 ];
 // --- END DUMP DATA ---
 
 const loginFormSchema = z.object({
   email: z.string().email("Invalid email address."),
-  password: z.string().min(1, "Password is required."), // Min 1 as we are using a dummy password
+  password: z.string().min(1, "Password is required."),
 });
 
 export default function LoginPage() {
@@ -75,6 +108,15 @@ export default function LoginPage() {
     const foundUser = dumpUsers.find(u => u.email === values.email);
 
     if (foundUser && values.password === DUMMY_PASSWORD) {
+      if (foundUser.accountStatus === 'suspended') {
+         toast({
+          title: "Login Failed",
+          description: "This account is currently suspended.",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
       authContext.loginWithDumpUser(foundUser);
       toast({
         title: "Login Successful!",
@@ -82,7 +124,17 @@ export default function LoginPage() {
       });
       const queryParams = new URLSearchParams(window.location.search);
       const redirectPath = queryParams.get("redirect");
-      router.push(redirectPath || "/profile");
+      
+      // Redirect based on role after login
+      let destination = "/profile"; // Default redirect
+      if (foundUser.role === 'admin') {
+        destination = "/admin/dashboard";
+      } else if (foundUser.role === 'staff') {
+        // Staff might go to a specific staff dashboard or emergency page
+        destination = "/emergency"; 
+      }
+      router.push(redirectPath || destination);
+
     } else {
       toast({
         title: "Login Failed",
@@ -104,8 +156,13 @@ export default function LoginPage() {
             Access your BloodConnect account.
             <br />
             <span className="text-xs text-muted-foreground">
-              (Using Dump Data - try member@example.com, staff@example.com, or admin@example.com with password: '{DUMMY_PASSWORD}')
+              (Using Dump Data - try an email from the list with password: '{DUMMY_PASSWORD}')
             </span>
+            <ul className="text-xs text-muted-foreground/70 list-disc list-inside mt-1">
+              <li>member@example.com</li>
+              <li>staff@example.com</li>
+              <li>admin@example.com</li>
+            </ul>
           </CardDescription>
         </CardHeader>
         <CardContent>

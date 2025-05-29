@@ -7,6 +7,9 @@ export interface AuthUser {
   displayName: string | null;
   role: Role;
   photoURL?: string | null;
+  // Mock field for admin user management page
+  lastLogin?: string; 
+  accountStatus?: 'active' | 'suspended';
 }
 
 // Keep existing types
@@ -60,12 +63,15 @@ export interface EmergencyRequest {
   requestedBy?: string; // staff ID
 }
 
-export const bloodTypes: string[] = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+export interface BloodUnit {
+  id: string;
+  hospitalId: string; // Could be a staff ID if one staff manages one hospital's units
+  hospitalName: string;
+  bloodType: string;
+  quantity: number; // in units (e.g., pints)
+  lastUpdated: string; // ISO date string
+  status?: 'available' | 'low' | 'critical'; // Optional status
+}
 
-// Consider adding a type for Blood Units later
-// export interface BloodUnit {
-//   hospitalId: string;
-//   bloodType: string;
-//   quantity: number;
-//   lastUpdated: string;
-// }
+
+export const bloodTypes: string[] = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
