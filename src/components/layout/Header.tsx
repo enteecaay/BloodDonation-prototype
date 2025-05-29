@@ -2,13 +2,32 @@
 "use client";
 
 import Link from "next/link";
-import { Droplet, Menu, X, UserCircle, LogIn, UserPlus, LogOut, LayoutDashboard, ShieldCheck, Activity } from "lucide-react";
+import { 
+    Droplet, 
+    Menu, 
+    X, 
+    UserCircle, 
+    LogIn, 
+    UserPlus, 
+    LogOut, 
+    LayoutDashboard, 
+    ShieldCheck, 
+    Activity,
+    Siren, // Added
+    Mail, // Added
+    CalendarDays, // Added
+    FileText, // Added
+    Users, // Added
+    HeartHandshake, // Added
+    CalendarCheck, // Added
+    DatabaseZap // Added
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/useAuth"; // Updated import
+import { useAuth } from "@/hooks/useAuth";
 import type { Role } from "@/types";
 
 // Define base navigation items
@@ -16,37 +35,40 @@ const baseNavItems = [
   { href: "/", label: "Home" },
   { href: "/blood-drives", label: "Blood Drives" },
   { href: "/blog", label: "Blog" },
-  { href: "/emergency", label: "Emergency" },
 ];
 
 // Define navigation items for different roles
-const navItemsByRole: Record<Role, Array<{ href: string; label: string; icon?: React.ReactNode }>> = {
+const navItemsByRole: Record<Role | 'guest', Array<{ href: string; label: string; icon?: React.ReactNode }>> = {
   guest: [
     ...baseNavItems,
+    { href: "/register", label: "Become a Donor", icon: <UserPlus size={16}/> },
   ],
   member: [
     ...baseNavItems,
-    { href: "/register", label: "Donor Profile", icon: <UserCircle size={16}/> }, // Donor registration / profile view
+    { href: "/register", label: "Donor Profile", icon: <UserCircle size={16}/> },
     { href: "/search", label: "Find Blood", icon: <Activity size={16}/> },
-    { href: "/reminder", label: "Donation Reminder", icon: <UserCircle size={16}/> }, // Assuming members can use this for themselves
+    { href: "/emergency", label: "Emergency Requests", icon: <Siren size={16}/> },
   ],
   staff: [
     ...baseNavItems,
     { href: "/search", label: "Find Blood", icon: <Activity size={16}/> },
+    { href: "/emergency", label: "Emergency System", icon: <Siren size={16}/> }, // Staff can post
+    { href: "/reminder", label: "Donation Reminder", icon: <Mail size={16}/> },
     // Staff specific links (examples, actual pages need to be created)
-    // { href: "/staff/manage-drives", label: "Manage Drives", icon: <LayoutDashboard size={16}/> },
-    // { href: "/staff/manage-blogs", label: "Manage Blogs", icon: <LayoutDashboard size={16}/> },
-    // { href: "/staff/blood-units", label: "Manage Blood Units", icon: <LayoutDashboard size={16}/> },
-     { href: "/reminder", label: "Donation Reminder", icon: <UserCircle size={16}/> },
+    // { href: "/staff/manage-drives", label: "Manage Drives", icon: <CalendarDays size={16}/> },
+    // { href: "/staff/manage-blogs", label: "Manage Blogs", icon: <FileText size={16}/> },
+    // { href: "/staff/blood-units", label: "Blood Units (My Hospital)", icon: <Droplet size={16}/> },
   ],
   admin: [
     ...baseNavItems,
+    { href: "/reminder", label: "Donation Reminder Tool", icon: <Mail size={16}/> }, // Admin can use for any donor
     // Admin specific links (examples)
     // { href: "/admin/dashboard", label: "Admin Dashboard", icon: <ShieldCheck size={16}/> },
-    // { href: "/admin/manage-users", label: "Manage Users", icon: <UserCircle size={16}/> },
-    // { href: "/admin/manage-all-blogs", label: "Manage All Blogs", icon: <LayoutDashboard size={16}/> },
-    // { href: "/admin/manage-all-drives", label: "Manage All Drives", icon: <LayoutDashboard size={16}/> },
-     { href: "/reminder", label: "Donation Reminder", icon: <UserCircle size={16}/> }, // Admin can use for any donor
+    // { href: "/admin/manage-users", label: "Manage Users", icon: <Users size={16}/> },
+    // { href: "/admin/manage-donations", label: "Manage Donations", icon: <HeartHandshake size={16}/> },
+    // { href: "/admin/manage-all-blogs", label: "Manage All Blogs", icon: <LayoutDashboard size={16}/> }, // Using existing icon
+    // { href: "/admin/manage-all-drives", label: "Manage All Drives", icon: <CalendarCheck size={16}/> },
+    // { href: "/admin/manage-blood-units", label: "Blood Units (All)", icon: <DatabaseZap size={16}/> },
   ],
 };
 
@@ -102,11 +124,7 @@ export default function Header() {
               <Button variant="ghost" asChild className="text-sm font-medium text-foreground/80 hover:text-primary/90 hover:bg-accent/10">
                 <Link href="/login"><LogIn size={16} className="mr-1.5"/> Login</Link>
               </Button>
-              {/* Signup button removed for guest view
-              <Button variant="default" size="sm" asChild className="text-sm bg-accent hover:bg-accent/90 text-accent-foreground">
-                <Link href="/signup"><UserPlus size={16} className="mr-1.5"/> Sign Up</Link>
-              </Button>
-              */}
+              {/* Signup button is intentionally removed based on previous request to use dump data */}
             </>
           )}
         </nav>
@@ -173,13 +191,7 @@ export default function Header() {
                           <Link href="/login"><LogIn size={16} className="mr-2"/> Login</Link>
                         </Button>
                       </SheetClose>
-                      {/* Signup button removed for guest view in mobile
-                      <SheetClose asChild>
-                        <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">
-                          <Link href="/signup"><UserPlus size={16} className="mr-2"/> Sign Up</Link>
-                        </Button>
-                      </SheetClose>
-                      */}
+                      {/* Signup button is intentionally removed */}
                     </div>
                   )}
                 </div>
