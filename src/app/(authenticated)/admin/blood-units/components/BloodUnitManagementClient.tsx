@@ -4,7 +4,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { BloodUnit, BloodType } from "@/types"; // Assuming BloodType is exported or use string[]
+import type { BloodUnit } from "@/types"; // Assuming BloodType is exported or use string[]
 import { bloodTypes } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -30,6 +30,8 @@ const mockBloodUnits: BloodUnit[] = [
   { id: "bu005", hospitalId: "staff-001", hospitalName: "City General Hospital", bloodType: "O-", quantity: 15, lastUpdated: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), status: 'available' },
   { id: "bu006", hospitalId: "staff-003", hospitalName: "St. Luke's Downtown", bloodType: "A+", quantity: 30, lastUpdated: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(), status: 'available' },
 ];
+
+const ALL_BLOOD_TYPES_SENTINEL = "__ALL_TYPES__";
 
 export default function BloodUnitManagementClient() {
   const { user: adminUser, role, loading } = useAuth();
@@ -95,12 +97,21 @@ export default function BloodUnitManagementClient() {
         <div className="mb-6 p-4 border rounded-lg bg-secondary/30">
             <h3 className="text-lg font-semibold mb-3 flex items-center gap-2"><Filter size={20}/> Filters</h3>
             <div className="grid md:grid-cols-2 gap-4">
-                 <Select onValueChange={setFilterBloodType} value={filterBloodType}>
+                 <Select 
+                    onValueChange={(selectedValue) => {
+                        if (selectedValue === ALL_BLOOD_TYPES_SENTINEL) {
+                            setFilterBloodType("");
+                        } else {
+                            setFilterBloodType(selectedValue);
+                        }
+                    }} 
+                    value={filterBloodType}
+                  >
                     <SelectTrigger>
                         <SelectValue placeholder="Filter by Blood Type" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="">All Blood Types</SelectItem>
+                        <SelectItem value={ALL_BLOOD_TYPES_SENTINEL}>All Blood Types</SelectItem>
                         {bloodTypes.map(bt => <SelectItem key={bt} value={bt}>{bt}</SelectItem>)}
                     </SelectContent>
                 </Select>
